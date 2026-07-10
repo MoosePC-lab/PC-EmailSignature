@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Email Signature Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input, button {
+      display: block;
+      margin: 8px 0 15px;
+      padding: 8px;
+      width: 320px;
+      font-size: 14px;
+    }
+
+    button {
+      cursor: pointer;
+      width: 180px;
+    }
+
+    #signatureOutput {
+      margin-top: 30px;
+      border: 1px solid #ccc;
+      padding: 20px;
+      display: inline-block;
+      background: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Email Signature Generator</h2>
+
+  <label>Name</label>
+  <input id="name" placeholder="John Smith">
+
+  <label>Job Title</label>
+  <input id="title" placeholder="Supervisor">
+
+  <label>Extension</label>
+  <input id="extension" placeholder="1000">
+
+  <label>Cell</label>
+  <input id="cell" placeholder="+1(818) 555-1234">
+
+  <label>Fax</label>
+  <input id="fax" placeholder="+1(800) 555-9876">
+
+  <button onclick="generateSignature()">Generate Signature</button>
+  <button onclick="copySignature()">Copy Signature</button>
+
+  <div id="signatureOutput"></div>
+
+  <script>
+    function formatPhoneNumber(value) {
+      const digits = value.replace(/\D/g, "");
+
+      if (!digits) return "";
+
+      let phoneDigits = digits;
+
+      if (phoneDigits.length === 11 && phoneDigits.startsWith("1")) {
+        phoneDigits = phoneDigits.substring(1);
+      }
+
+      if (phoneDigits.length !== 10) {
+        return value;
+      }
+
+      return `+1(${phoneDigits.substring(0, 3)}) ${phoneDigits.substring(3, 6)}-${phoneDigits.substring(6)}`;
+    }
+
+    function generateSignature() {
+      const name = document.getElementById("name").value || "John Smith";
+      const title = document.getElementById("title").value || "Supervisor";
+      const extension = document.getElementById("extension").value.trim();
+      const cell = formatPhoneNumber(document.getElementById("cell").value.trim());
+      const fax = formatPhoneNumber(document.getElementById("fax").value.trim());
+
+      let phoneLine = "+1(800) 423-2341";
+
+      if (extension) {
+        phoneLine += " | Ext. " + extension;
+      }
+
+      let extraLines = "";
+
+      if (cell) {
+        extraLines += `
+          <tr>
+            <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;">
+              Cell: ${cell}
+            </td>
+          </tr>`;
+      }
+
+      if (fax) {
+        extraLines += `
+          <tr>
+            <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;">
+              Fax: ${fax}
+            </td>
+          </tr>`;
+      }
+
+      document.getElementById("signatureOutput").innerHTML = `
+        <table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;color:#000;border-collapse:collapse;">
+          <tr>
+            <td style="padding-right:20px;vertical-align:middle;">
+              <a href="https://personandcovey.com" target="_blank" style="text-decoration:none;border:0;">
+                <img 
+                  src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/65c24967-7deb-5a1a-9bea-4f098a0c09f3_430x.png" 
+                  width="95" 
+                  style="display:block;border:0;outline:none;text-decoration:none;"
+                  alt="Person and Covey Logo">
+              </a>
+            </td>
+
+            <td style="padding-right:25px;border-right:2px solid #333;vertical-align:middle;">
+              <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+                <tr>
+                  <td style="font-family:Arial,sans-serif;font-size:16px;font-weight:bold;color:#000;line-height:20px;">
+                    ${name}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;padding-bottom:10px;">
+                    ${title}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;">
+                    ${phoneLine}
+                  </td>
+                </tr>
+
+                ${extraLines}
+
+                <tr>
+                  <td style="font-family:Arial,sans-serif;font-size:16px;line-height:20px;">
+                    <a href="https://personandcovey.com" target="_blank" style="color:#0000EE;text-decoration:underline;">
+                      Personandcovey.com
+                    </a>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;">
+                    616 Allen Ave. Glendale, CA 91201
+                  </td>
+                </tr>
+              </table>
+            </td>
+
+            <td style="padding-left:12px;vertical-align:middle;">
+              <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+                <tr>
+                  <td style="padding-bottom:8px;">
+                    <a href="https://www.facebook.com/ShopPersonandCovey/" target="_blank" style="text-decoration:none;border:0;">
+                      <img 
+                        src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/610a722c-6f29-53d0-92e1-c230a368d387_430x.png" 
+                        width="32" 
+                        height="32" 
+                        style="display:block;border:0;outline:none;text-decoration:none;"
+                        alt="Facebook">
+                    </a>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding-bottom:8px;">
+                    <a href="https://www.instagram.com/personandcoveyinc" target="_blank" style="text-decoration:none;border:0;">
+                      <img 
+                        src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/148d42bc-2bc3-58ac-9f5e-dbbc4279340f_430x.png" 
+                        width="32" 
+                        height="32" 
+                        style="display:block;border:0;outline:none;text-decoration:none;"
+                        alt="Instagram">
+                    </a>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <a href="https://www.tiktok.com/@personandcoveyinc" target="_blank" style="text-decoration:none;border:0;">
+                      <img 
+                        src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/aa300f4f-2bd2-5daf-a926-fc3b95ead10f_430x.png" 
+                        width="32" 
+                        height="32" 
+                        style="display:block;border:0;outline:none;text-decoration:none;"
+                        alt="TikTok">
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="3" style="padding-top:22px;font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:22px;">
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/recycling_430x.png"
+                width="22"
+                height="22"
+                style="display:inline-block;border:0;outline:none;text-decoration:none;vertical-align:middle;margin-right:6px;"
+                alt="Recycle">
+              <span style="vertical-align:middle;">Please consider the environment before printing this email</span>
+            </td>
+          </tr>
+        </table>
+      `;
+    }
+
+    function copySignature() {
+      const signatureElement = document.getElementById("signatureOutput");
+      const signatureHTML = signatureElement.innerHTML;
+      const signatureText = signatureElement.innerText;
+
+      if (!signatureHTML.trim()) {
+        alert("Please generate a signature first.");
+        return;
+      }
+
+      if (navigator.clipboard && window.ClipboardItem) {
+        const htmlBlob = new Blob([signatureHTML], { type: "text/html" });
+        const textBlob = new Blob([signatureText], { type: "text/plain" });
+
+        navigator.clipboard.write([
+          new ClipboardItem({
+            "text/html": htmlBlob,
+            "text/plain": textBlob
+          })
+        ]).then(() => {
+          alert("Signature copied with formatting!");
+        }).catch(() => {
+          fallbackCopy(signatureElement);
+        });
+      } else {
+        fallbackCopy(signatureElement);
+      }
+    }
+
+    function fallbackCopy(element) {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      try {
+        document.execCommand("copy");
+        alert("Signature copied!");
+      } catch (err) {
+        alert("Copy failed. Please highlight the signature and press Ctrl+C.");
+      }
+
+      selection.removeAllRanges();
+    }
+
+    generateSignature();
+  </script>
+
+</body>
+</html>
