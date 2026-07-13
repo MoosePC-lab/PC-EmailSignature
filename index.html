@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Email Signature Generator</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,25 +13,48 @@
       font-weight: bold;
     }
 
-    input, button {
+    input,
+    button {
       display: block;
+      width: 320px;
       margin: 8px 0 15px;
       padding: 8px;
-      width: 320px;
       font-size: 14px;
     }
 
     button {
-      cursor: pointer;
       width: 180px;
+      cursor: pointer;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      width: 340px;
+      margin: 8px 0 20px;
+    }
+
+    .checkbox-row input {
+      display: inline-block;
+      flex: 0 0 auto;
+      width: auto;
+      margin: 3px 0 0;
+      padding: 0;
+    }
+
+    .checkbox-row label {
+      font-size: 14px;
+      line-height: 1.4;
+      cursor: pointer;
     }
 
     #signatureOutput {
-      margin-top: 30px;
-      border: 1px solid #ccc;
-      padding: 20px;
       display: inline-block;
+      margin-top: 30px;
+      padding: 20px;
       background: #fff;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
@@ -39,35 +63,73 @@
 
   <h2>Email Signature Generator</h2>
 
-  <label>Name</label>
-  <input id="name" placeholder="John Smith">
+  <label for="name">Name</label>
+  <input id="name" type="text" placeholder="John Smith">
 
-  <label>Job Title</label>
-  <input id="title" placeholder="Supervisor">
+  <label for="title">Job Title</label>
+  <input id="title" type="text" placeholder="Supervisor">
 
-  <label>Extension</label>
-  <input id="extension" placeholder="1000">
+  <label for="extension">Extension</label>
+  <input id="extension" type="text" inputmode="numeric" placeholder="1000">
 
-  <label>Cell</label>
-  <input id="cell" placeholder="+1(818) 555-1234">
+  <label for="cell">Cell</label>
+  <input id="cell" type="tel" placeholder="+1(818) 555-1234">
 
-  <label>Fax</label>
-  <input id="fax" placeholder="+1(800) 555-9876">
+  <label for="fax">Fax</label>
+  <input id="fax" type="tel" placeholder="+1(800) 555-9876">
 
-  <button onclick="generateSignature()">Generate Signature</button>
-  <button onclick="copySignature()">Copy Signature</button>
+  <div class="checkbox-row">
+    <input
+      id="includeConfidentiality"
+      type="checkbox"
+    >
+
+    <label for="includeConfidentiality">
+      Include confidentiality notice
+    </label>
+  </div>
+
+  <button type="button" onclick="generateSignature()">
+    Generate Signature
+  </button>
+
+  <button type="button" onclick="copySignature()">
+    Copy Signature
+  </button>
 
   <div id="signatureOutput"></div>
 
   <script>
+    const confidentialityNotice =
+      "Confidentiality Notice: This email message, including any attachments, " +
+      "is for the sole use of the intended recipient(s) and may contain " +
+      "confidential and proprietary information. Any unauthorized review, use, " +
+      "disclosure or distribution is prohibited. If you are not the intended " +
+      "recipient, please contact the sender by reply email and destroy all " +
+      "copies of the original message.";
+
+    function escapeHTML(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
     function formatPhoneNumber(value) {
       const digits = value.replace(/\D/g, "");
 
-      if (!digits) return "";
+      if (!digits) {
+        return "";
+      }
 
       let phoneDigits = digits;
 
-      if (phoneDigits.length === 11 && phoneDigits.startsWith("1")) {
+      if (
+        phoneDigits.length === 11 &&
+        phoneDigits.startsWith("1")
+      ) {
         phoneDigits = phoneDigits.substring(1);
       }
 
@@ -75,15 +137,46 @@
         return value;
       }
 
-      return `+1(${phoneDigits.substring(0, 3)}) ${phoneDigits.substring(3, 6)}-${phoneDigits.substring(6)}`;
+      return (
+        "+1(" +
+        phoneDigits.substring(0, 3) +
+        ") " +
+        phoneDigits.substring(3, 6) +
+        "-" +
+        phoneDigits.substring(6)
+      );
     }
 
     function generateSignature() {
-      const name = document.getElementById("name").value || "John Smith";
-      const title = document.getElementById("title").value || "Supervisor";
-      const extension = document.getElementById("extension").value.trim();
-      const cell = formatPhoneNumber(document.getElementById("cell").value.trim());
-      const fax = formatPhoneNumber(document.getElementById("fax").value.trim());
+      const nameValue =
+        document.getElementById("name").value.trim() ||
+        "John Smith";
+
+      const titleValue =
+        document.getElementById("title").value.trim() ||
+        "Supervisor";
+
+      const extensionValue =
+        document.getElementById("extension").value.trim();
+
+      const cellValue = formatPhoneNumber(
+        document.getElementById("cell").value.trim()
+      );
+
+      const faxValue = formatPhoneNumber(
+        document.getElementById("fax").value.trim()
+      );
+
+      const includeConfidentiality =
+        document.getElementById(
+          "includeConfidentiality"
+        ).checked;
+
+      const name = escapeHTML(nameValue);
+      const title = escapeHTML(titleValue);
+      const extension = escapeHTML(extensionValue);
+      const cell = escapeHTML(cellValue);
+      const fax = escapeHTML(faxValue);
 
       let phoneLine = "+1(800) 423-2341";
 
@@ -96,52 +189,159 @@
       if (cell) {
         extraLines += `
           <tr>
-            <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;">
+            <td
+              style="
+                font-family:Arial,sans-serif;
+                font-size:16px;
+                color:#000000;
+                line-height:20px;
+              "
+            >
               Cell: ${cell}
             </td>
-          </tr>`;
+          </tr>
+        `;
       }
 
       if (fax) {
         extraLines += `
           <tr>
-            <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;">
+            <td
+              style="
+                font-family:Arial,sans-serif;
+                font-size:16px;
+                color:#000000;
+                line-height:20px;
+              "
+            >
               Fax: ${fax}
             </td>
-          </tr>`;
+          </tr>
+        `;
+      }
+
+      let confidentialitySection = "";
+
+      if (includeConfidentiality) {
+        confidentialitySection = `
+          <tr>
+            <td
+              colspan="3"
+              style="
+                padding-top:14px;
+                font-family:Arial,sans-serif;
+                font-size:10px;
+                color:#555555;
+                line-height:14px;
+                max-width:600px;
+              "
+            >
+              <strong style="font-weight:bold;color:#555555;">
+                Confidentiality Notice:
+              </strong>
+              This email message, including any attachments, is for the sole
+              use of the intended recipient(s) and may contain confidential
+              and proprietary information. Any unauthorized review, use,
+              disclosure or distribution is prohibited. If you are not the
+              intended recipient, please contact the sender by reply email
+              and destroy all copies of the original message.
+            </td>
+          </tr>
+        `;
       }
 
       document.getElementById("signatureOutput").innerHTML = `
-        <table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;color:#000;border-collapse:collapse;">
+        <table
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          style="
+            font-family:Arial,sans-serif;
+            color:#000000;
+            border-collapse:collapse;
+          "
+        >
           <tr>
-            <td style="padding-right:20px;vertical-align:middle;">
-              <a href="https://personandcovey.com" target="_blank" style="text-decoration:none;border:0;">
-                <img 
-                  src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/pclogo_430x.png" 
-                  width="95" 
-                  style="display:block;border:0;outline:none;text-decoration:none;"
-                  alt="Person and Covey Logo">
+            <td
+              style="
+                padding-right:20px;
+                vertical-align:middle;
+              "
+            >
+              <a
+                href="https://personandcovey.com"
+                target="_blank"
+                style="
+                  text-decoration:none;
+                  border:0;
+                "
+              >
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/pclogo_430x.png"
+                  width="95"
+                  alt="Person and Covey Logo"
+                  style="
+                    display:block;
+                    width:95px;
+                    height:auto;
+                    border:0;
+                    outline:none;
+                    text-decoration:none;
+                  "
+                >
               </a>
             </td>
 
-            
-
-            <td style="padding-right:25px;border-right:2px solid #333;vertical-align:middle;">
-              <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+            <td
+              style="
+                padding-right:25px;
+                border-right:2px solid #333333;
+                vertical-align:middle;
+              "
+            >
+              <table
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                style="border-collapse:collapse;"
+              >
                 <tr>
-                  <td style="font-family:Arial,sans-serif;font-size:16px;font-weight:bold;color:#000;line-height:20px;">
+                  <td
+                    style="
+                      font-family:Arial,sans-serif;
+                      font-size:16px;
+                      font-weight:bold;
+                      color:#000000;
+                      line-height:20px;
+                    "
+                  >
                     ${name}
                   </td>
                 </tr>
 
                 <tr>
-                  <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;padding-bottom:10px;">
+                  <td
+                    style="
+                      padding-bottom:10px;
+                      font-family:Arial,sans-serif;
+                      font-size:16px;
+                      color:#000000;
+                      line-height:20px;
+                    "
+                  >
                     ${title}
                   </td>
                 </tr>
 
                 <tr>
-                  <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;">
+                  <td
+                    style="
+                      font-family:Arial,sans-serif;
+                      font-size:16px;
+                      color:#000000;
+                      line-height:20px;
+                    "
+                  >
                     ${phoneLine}
                   </td>
                 </tr>
@@ -149,58 +349,133 @@
                 ${extraLines}
 
                 <tr>
-                  <td style="font-family:Arial,sans-serif;font-size:16px;line-height:20px;">
-                    <a href="https://personandcovey.com" target="_blank" style="color:#0000EE;text-decoration:underline;">
+                  <td
+                    style="
+                      font-family:Arial,sans-serif;
+                      font-size:16px;
+                      line-height:20px;
+                    "
+                  >
+                    <a
+                      href="https://personandcovey.com"
+                      target="_blank"
+                      style="
+                        color:#0000ee;
+                        text-decoration:underline;
+                      "
+                    >
                       Personandcovey.com
                     </a>
                   </td>
                 </tr>
 
                 <tr>
-                  <td style="font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:20px;">
+                  <td
+                    style="
+                      font-family:Arial,sans-serif;
+                      font-size:16px;
+                      color:#000000;
+                      line-height:20px;
+                    "
+                  >
                     616 Allen Ave. Glendale, CA 91201
                   </td>
                 </tr>
               </table>
             </td>
 
-            <td style="padding-left:12px;vertical-align:middle;">
-              <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+            <td
+              style="
+                padding-left:12px;
+                vertical-align:middle;
+              "
+            >
+              <table
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                style="border-collapse:collapse;"
+              >
                 <tr>
                   <td style="padding-bottom:8px;">
-                    <a href="https://www.facebook.com/ShopPersonandCovey/" target="_blank" style="text-decoration:none;border:0;">
-                      <img 
-                        src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/610a722c-6f29-53d0-92e1-c230a368d387_430x.png" 
-                        width="32" 
-                        height="32" 
-                        style="display:block;border:0;outline:none;text-decoration:none;"
-                        alt="Facebook">
+                    <a
+                      href="https://www.facebook.com/ShopPersonandCovey/"
+                      target="_blank"
+                      style="
+                        text-decoration:none;
+                        border:0;
+                      "
+                    >
+                      <img
+                        src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/610a722c-6f29-53d0-92e1-c230a368d387_430x.png"
+                        width="32"
+                        height="32"
+                        alt="Facebook"
+                        style="
+                          display:block;
+                          width:32px;
+                          height:32px;
+                          border:0;
+                          outline:none;
+                          text-decoration:none;
+                        "
+                      >
                     </a>
                   </td>
                 </tr>
 
                 <tr>
                   <td style="padding-bottom:8px;">
-                    <a href="https://www.instagram.com/personandcoveyinc" target="_blank" style="text-decoration:none;border:0;">
-                      <img 
-                        src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/148d42bc-2bc3-58ac-9f5e-dbbc4279340f_430x.png" 
-                        width="32" 
-                        height="32" 
-                        style="display:block;border:0;outline:none;text-decoration:none;"
-                        alt="Instagram">
+                    <a
+                      href="https://www.instagram.com/personandcoveyinc"
+                      target="_blank"
+                      style="
+                        text-decoration:none;
+                        border:0;
+                      "
+                    >
+                      <img
+                        src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/148d42bc-2bc3-58ac-9f5e-dbbc4279340f_430x.png"
+                        width="32"
+                        height="32"
+                        alt="Instagram"
+                        style="
+                          display:block;
+                          width:32px;
+                          height:32px;
+                          border:0;
+                          outline:none;
+                          text-decoration:none;
+                        "
+                      >
                     </a>
                   </td>
                 </tr>
 
                 <tr>
                   <td>
-                    <a href="https://www.tiktok.com/@personandcoveyinc" target="_blank" style="text-decoration:none;border:0;">
-                      <img 
-                        src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/aa300f4f-2bd2-5daf-a926-fc3b95ead10f_430x.png" 
-                        width="32" 
-                        height="32" 
-                        style="display:block;border:0;outline:none;text-decoration:none;"
-                        alt="TikTok">
+                    <a
+                      href="https://www.tiktok.com/@personandcoveyinc"
+                      target="_blank"
+                      style="
+                        text-decoration:none;
+                        border:0;
+                      "
+                    >
+                      <img
+                        src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/aa300f4f-2bd2-5daf-a926-fc3b95ead10f_430x.png"
+                        width="32"
+                        height="32"
+                        alt="TikTok"
+                        style="
+                          display:block;
+                          width:32px;
+                          height:32px;
+                          border:0;
+                          outline:none;
+                          text-decoration:none;
+                        "
+                      >
                     </a>
                   </td>
                 </tr>
@@ -209,22 +484,48 @@
           </tr>
 
           <tr>
-            <td colspan="3" style="padding-top:22px;font-family:Arial,sans-serif;font-size:16px;color:#000;line-height:22px;">
-              <img 
+            <td
+              colspan="3"
+              style="
+                padding-top:22px;
+                font-family:Arial,sans-serif;
+                font-size:16px;
+                color:#000000;
+                line-height:22px;
+              "
+            >
+              <img
                 src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/recycling_430x.png"
                 width="22"
                 height="22"
-                style="display:inline-block;border:0;outline:none;text-decoration:none;vertical-align:middle;margin-right:6px;"
-                alt="Recycle">
-              <span style="vertical-align:middle;">Please consider the environment before printing this email</span>
+                alt="Recycle"
+                style="
+                  display:inline-block;
+                  width:22px;
+                  height:22px;
+                  margin-right:6px;
+                  border:0;
+                  outline:none;
+                  text-decoration:none;
+                  vertical-align:middle;
+                "
+              >
+
+              <span style="vertical-align:middle;">
+                Please consider the environment before printing this email
+              </span>
             </td>
           </tr>
+
+          ${confidentialitySection}
         </table>
       `;
     }
 
-    function copySignature() {
-      const signatureElement = document.getElementById("signatureOutput");
+    async function copySignature() {
+      const signatureElement =
+        document.getElementById("signatureOutput");
+
       const signatureHTML = signatureElement.innerHTML;
       const signatureText = signatureElement.innerText;
 
@@ -233,20 +534,32 @@
         return;
       }
 
-      if (navigator.clipboard && window.ClipboardItem) {
-        const htmlBlob = new Blob([signatureHTML], { type: "text/html" });
-        const textBlob = new Blob([signatureText], { type: "text/plain" });
+      if (
+        navigator.clipboard &&
+        window.ClipboardItem
+      ) {
+        const htmlBlob = new Blob(
+          [signatureHTML],
+          { type: "text/html" }
+        );
 
-        navigator.clipboard.write([
-          new ClipboardItem({
-            "text/html": htmlBlob,
-            "text/plain": textBlob
-          })
-        ]).then(() => {
+        const textBlob = new Blob(
+          [signatureText],
+          { type: "text/plain" }
+        );
+
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": htmlBlob,
+              "text/plain": textBlob
+            })
+          ]);
+
           alert("Signature copied with formatting!");
-        }).catch(() => {
+        } catch (error) {
           fallbackCopy(signatureElement);
-        });
+        }
       } else {
         fallbackCopy(signatureElement);
       }
@@ -261,10 +574,17 @@
       selection.addRange(range);
 
       try {
-        document.execCommand("copy");
+        const copied = document.execCommand("copy");
+
+        if (!copied) {
+          throw new Error("Copy command failed.");
+        }
+
         alert("Signature copied!");
-      } catch (err) {
-        alert("Copy failed. Please highlight the signature and press Ctrl+C.");
+      } catch (error) {
+        alert(
+          "Copy failed. Please highlight the signature and press Ctrl+C."
+        );
       }
 
       selection.removeAllRanges();
