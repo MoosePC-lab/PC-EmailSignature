@@ -1,112 +1,218 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>Email Signature Generator</title>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
       padding: 30px;
+      background: #ffffff;
+      color: #000000;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    label {
-      font-weight: bold;
+    .generator-container {
+      width: 100%;
+      max-width: 600px;
     }
 
-    input,
-    button {
+    .generator-container h2 {
+      margin: 0 0 24px;
+      font-size: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="tel"] {
       display: block;
       width: 320px;
-      margin: 8px 0 15px;
+      max-width: 100%;
       padding: 8px;
+      border: 1px solid #888888;
+      background: #ffffff;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 14px;
-    }
-
-    button {
-      width: 180px;
-      cursor: pointer;
     }
 
     .checkbox-row {
       display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      align-items: center;
+      gap: 9px;
       width: 340px;
+      max-width: 100%;
       margin: 8px 0 20px;
     }
 
     .checkbox-row input {
-      display: inline-block;
       flex: 0 0 auto;
-      width: auto;
-      margin: 3px 0 0;
-      padding: 0;
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      cursor: pointer;
     }
 
     .checkbox-row label {
+      margin: 0;
       font-size: 14px;
+      font-weight: 700;
       line-height: 1.4;
       cursor: pointer;
     }
 
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    button {
+      width: 180px;
+      padding: 9px 12px;
+      border: 1px solid #888888;
+      background: #f3f3f3;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e8e8e8;
+    }
+
     #signatureOutput {
       display: inline-block;
+      width: auto;
+      max-width: 100%;
       margin-top: 30px;
       padding: 20px;
-      background: #fff;
-      border: 1px solid #ccc;
+      overflow-x: auto;
+      border: 1px solid #cccccc;
+      background: #ffffff;
+      box-sizing: border-box;
+    }
+
+    @media screen and (max-width: 550px) {
+      body {
+        padding: 16px;
+      }
+
+      #signatureOutput {
+        padding: 8px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <h2>Email Signature Generator</h2>
+  <main class="generator-container">
 
-  <label for="name">Name</label>
-  <input id="name" type="text" placeholder="John Smith">
+    <h2>Email Signature Generator</h2>
 
-  <label for="title">Job Title</label>
-  <input id="title" type="text" placeholder="Supervisor">
+    <div class="form-group">
+      <label for="name">Name</label>
 
-  <label for="extension">Extension</label>
-  <input id="extension" type="text" inputmode="numeric" placeholder="1000">
+      <input
+        id="name"
+        type="text"
+        placeholder="John Smith"
+      >
+    </div>
 
-  <label for="cell">Cell</label>
-  <input id="cell" type="tel" placeholder="+1(818) 555-1234">
+    <div class="form-group">
+      <label for="title">Job Title</label>
 
-  <label for="fax">Fax</label>
-  <input id="fax" type="tel" placeholder="+1(800) 555-9876">
+      <input
+        id="title"
+        type="text"
+        placeholder="Supervisor"
+      >
+    </div>
 
-  <div class="checkbox-row">
-    <input
-      id="includeConfidentiality"
-      type="checkbox"
-    >
+    <div class="form-group">
+      <label for="extension">Extension</label>
 
-    <label for="includeConfidentiality">
-      Include confidentiality notice
-    </label>
-  </div>
+      <input
+        id="extension"
+        type="text"
+        inputmode="numeric"
+        placeholder="1000"
+      >
+    </div>
 
-  <button type="button" onclick="generateSignature()">
-    Generate Signature
-  </button>
+    <div class="form-group">
+      <label for="cell">Cell</label>
 
-  <button type="button" onclick="copySignature()">
-    Copy Signature
-  </button>
+      <input
+        id="cell"
+        type="tel"
+        placeholder="+1(818) 555-1234"
+      >
+    </div>
 
-  <div id="signatureOutput"></div>
+    <div class="form-group">
+      <label for="fax">Fax</label>
+
+      <input
+        id="fax"
+        type="tel"
+        placeholder="+1(800) 555-9876"
+      >
+    </div>
+
+    <div class="checkbox-row">
+      <input
+        id="includeConfidentiality"
+        type="checkbox"
+      >
+
+      <label for="includeConfidentiality">
+        Include confidentiality notice
+      </label>
+    </div>
+
+    <div class="button-row">
+      <button
+        type="button"
+        onclick="generateSignature()"
+      >
+        Generate Signature
+      </button>
+
+      <button
+        type="button"
+        onclick="copySignature()"
+      >
+        Copy Signature
+      </button>
+    </div>
+
+    <div id="signatureOutput"></div>
+
+  </main>
 
   <script>
-    const confidentialityNotice =
-      "Confidentiality Notice: This email message, including any attachments, " +
-      "is for the sole use of the intended recipient(s) and may contain " +
-      "confidential and proprietary information. Any unauthorized review, use, " +
-      "disclosure or distribution is prohibited. If you are not the intended " +
-      "recipient, please contact the sender by reply email and destroy all " +
-      "copies of the original message.";
+    const SIGNATURE_WIDTH = 470;
 
     function escapeHTML(value) {
       return String(value)
@@ -118,7 +224,7 @@
     }
 
     function formatPhoneNumber(value) {
-      const digits = value.replace(/\D/g, "");
+      const digits = String(value).replace(/\D/g, "");
 
       if (!digits) {
         return "";
@@ -184,19 +290,19 @@
         phoneLine += " | Ext. " + extension;
       }
 
-      let extraLines = "";
+      let optionalPhoneRows = "";
 
       if (cell) {
-        extraLines += `
+        optionalPhoneRows += `
           <tr>
-            <td
-              style="
-                font-family:Arial,sans-serif;
-                font-size:16px;
-                color:#000000;
-                line-height:20px;
-              "
-            >
+            <td style="
+              padding:0;
+              font-family:Arial,Helvetica,sans-serif;
+              font-size:16px;
+              line-height:20px;
+              color:#000000;
+              white-space:nowrap;
+            ">
               Cell: ${cell}
             </td>
           </tr>
@@ -204,67 +310,145 @@
       }
 
       if (fax) {
-        extraLines += `
+        optionalPhoneRows += `
           <tr>
-            <td
-              style="
-                font-family:Arial,sans-serif;
-                font-size:16px;
-                color:#000000;
-                line-height:20px;
-              "
-            >
+            <td style="
+              padding:0;
+              font-family:Arial,Helvetica,sans-serif;
+              font-size:16px;
+              line-height:20px;
+              color:#000000;
+              white-space:nowrap;
+            ">
               Fax: ${fax}
             </td>
           </tr>
         `;
       }
 
-      let confidentialitySection = "";
+      let confidentialityRow = "";
 
       if (includeConfidentiality) {
-        confidentialitySection = `
+        confidentialityRow = `
           <tr>
             <td
-              colspan="3"
+              colspan="7"
+              width="${SIGNATURE_WIDTH}"
               style="
-                padding-top:14px;
-                font-family:Arial,sans-serif;
-                font-size:10px;
-                color:#555555;
-                line-height:14px;
-                max-width:600px;
+                width:${SIGNATURE_WIDTH}px;
+                padding:8px 0 0 0;
+                vertical-align:top;
               "
             >
-              <strong style="font-weight:bold;color:#555555;">
-                Confidentiality Notice:
-              </strong>
-              This email message, including any attachments, is for the sole
-              use of the intended recipient(s) and may contain confidential
-              and proprietary information. Any unauthorized review, use,
-              disclosure or distribution is prohibited. If you are not the
-              intended recipient, please contact the sender by reply email
-              and destroy all copies of the original message.
+              <table
+                width="${SIGNATURE_WIDTH}"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                role="presentation"
+                style="
+                  width:${SIGNATURE_WIDTH}px;
+                  border-collapse:collapse;
+                  border-spacing:0;
+                  table-layout:fixed;
+                "
+              >
+                <tr>
+                  <td
+                    width="${SIGNATURE_WIDTH}"
+                    style="
+                      width:${SIGNATURE_WIDTH}px;
+                      padding:0;
+                      vertical-align:top;
+                      text-align:left;
+                      font-family:Arial,Helvetica,sans-serif;
+                      font-size:8pt;
+                      mso-ansi-font-size:8pt;
+                      mso-bidi-font-size:8pt;
+                      line-height:9pt;
+                      mso-line-height-rule:exactly;
+                      color:#333333;
+                      word-break:normal;
+                      overflow-wrap:normal;
+                    "
+                  >
+                    <span
+                      style="
+                        font-family:Arial,Helvetica,sans-serif;
+                        font-size:8pt;
+                        mso-ansi-font-size:8pt;
+                        mso-bidi-font-size:8pt;
+                        line-height:9pt;
+                        mso-line-height-rule:exactly;
+                        color:#333333;
+                      "
+                    >
+                      <strong
+                        style="
+                          font-family:Arial,Helvetica,sans-serif;
+                          font-size:8pt;
+                          mso-ansi-font-size:8pt;
+                          mso-bidi-font-size:8pt;
+                          line-height:9pt;
+                          mso-line-height-rule:exactly;
+                          font-weight:700;
+                          color:#333333;
+                        "
+                      >
+                        Confidentiality Notice:
+                      </strong>
+                      This email message, including any attachments, is for the
+                      sole use of the intended recipient(s) and may contain
+                      confidential and proprietary information. Any unauthorized
+                      review, use, disclosure or distribution is prohibited. If
+                      you are not the intended recipient, please contact the
+                      sender by reply email and destroy all copies of the original
+                      message.
+                    </span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         `;
       }
 
-      document.getElementById("signatureOutput").innerHTML = `
+      const signatureHTML = `
         <table
+          width="${SIGNATURE_WIDTH}"
           cellpadding="0"
           cellspacing="0"
           border="0"
+          role="presentation"
           style="
-            font-family:Arial,sans-serif;
-            color:#000000;
+            width:${SIGNATURE_WIDTH}px;
+            max-width:${SIGNATURE_WIDTH}px;
             border-collapse:collapse;
+            border-spacing:0;
+            table-layout:fixed;
+            font-family:Arial,Helvetica,sans-serif;
+            color:#000000;
+            background:#ffffff;
           "
         >
+          <colgroup>
+            <col width="105">
+            <col width="18">
+            <col width="280">
+            <col width="2">
+            <col width="10">
+            <col width="32">
+            <col width="23">
+          </colgroup>
+
           <tr>
+
+            <!-- Logo -->
             <td
+              width="105"
               style="
-                padding-right:20px;
+                width:105px;
+                padding:0;
                 vertical-align:middle;
               "
             >
@@ -272,18 +456,20 @@
                 href="https://personandcovey.com"
                 target="_blank"
                 style="
-                  text-decoration:none;
                   border:0;
+                  text-decoration:none;
                 "
               >
                 <img
                   src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/pclogo_430x.png"
-                  width="95"
+                  width="105"
                   alt="Person and Covey Logo"
                   style="
                     display:block;
-                    width:95px;
+                    width:105px;
                     height:auto;
+                    margin:0;
+                    padding:0;
                     border:0;
                     outline:none;
                     text-decoration:none;
@@ -292,70 +478,90 @@
               </a>
             </td>
 
+            <!-- Space between logo and information -->
             <td
+              width="18"
               style="
-                padding-right:25px;
-                border-right:2px solid #333333;
+                width:18px;
+                padding:0;
+                font-size:0;
+                line-height:0;
+              "
+            >
+              &nbsp;
+            </td>
+
+            <!-- Contact information -->
+            <td
+              width="280"
+              style="
+                width:280px;
+                padding:0;
                 vertical-align:middle;
               "
             >
               <table
+                width="280"
                 cellpadding="0"
                 cellspacing="0"
                 border="0"
-                style="border-collapse:collapse;"
+                role="presentation"
+                style="
+                  width:280px;
+                  border-collapse:collapse;
+                  border-spacing:0;
+                "
               >
                 <tr>
-                  <td
-                    style="
-                      font-family:Arial,sans-serif;
-                      font-size:16px;
-                      font-weight:bold;
-                      color:#000000;
-                      line-height:20px;
-                    "
-                  >
+                  <td style="
+                    padding:0;
+                    font-family:Arial,Helvetica,sans-serif;
+                    font-size:16px;
+                    font-weight:700;
+                    line-height:20px;
+                    color:#000000;
+                    white-space:nowrap;
+                  ">
                     ${name}
                   </td>
                 </tr>
 
                 <tr>
-                  <td
-                    style="
-                      padding-bottom:10px;
-                      font-family:Arial,sans-serif;
-                      font-size:16px;
-                      color:#000000;
-                      line-height:20px;
-                    "
-                  >
+                  <td style="
+                    padding:0 0 10px 0;
+                    font-family:Arial,Helvetica,sans-serif;
+                    font-size:16px;
+                    line-height:20px;
+                    color:#000000;
+                    white-space:nowrap;
+                  ">
                     ${title}
                   </td>
                 </tr>
 
                 <tr>
-                  <td
-                    style="
-                      font-family:Arial,sans-serif;
-                      font-size:16px;
-                      color:#000000;
-                      line-height:20px;
-                    "
-                  >
+                  <td style="
+                    padding:0;
+                    font-family:Arial,Helvetica,sans-serif;
+                    font-size:16px;
+                    line-height:20px;
+                    color:#000000;
+                    white-space:nowrap;
+                  ">
                     ${phoneLine}
                   </td>
                 </tr>
 
-                ${extraLines}
+                ${optionalPhoneRows}
 
                 <tr>
-                  <td
-                    style="
-                      font-family:Arial,sans-serif;
-                      font-size:16px;
-                      line-height:20px;
-                    "
-                  >
+                  <td style="
+                    padding:0;
+                    font-family:Arial,Helvetica,sans-serif;
+                    font-size:16px;
+                    line-height:20px;
+                    white-space:nowrap;
+                  ">
                     <a
                       href="https://personandcovey.com"
                       target="_blank"
@@ -370,41 +576,74 @@
                 </tr>
 
                 <tr>
-                  <td
-                    style="
-                      font-family:Arial,sans-serif;
-                      font-size:16px;
-                      color:#000000;
-                      line-height:20px;
-                    "
-                  >
+                  <td style="
+                    padding:0;
+                    font-family:Arial,Helvetica,sans-serif;
+                    font-size:16px;
+                    line-height:20px;
+                    color:#000000;
+                    white-space:nowrap;
+                  ">
                     616 Allen Ave. Glendale, CA 91201
                   </td>
                 </tr>
               </table>
             </td>
 
+            <!-- Divider -->
             <td
+              width="2"
               style="
-                padding-left:12px;
+                width:2px;
+                padding:0;
+                border-left:2px solid #333333;
+                font-size:0;
+                line-height:0;
+              "
+            >
+              &nbsp;
+            </td>
+
+            <!-- Space between divider and icons -->
+            <td
+              width="10"
+              style="
+                width:10px;
+                padding:0;
+                font-size:0;
+                line-height:0;
+              "
+            >
+              &nbsp;
+            </td>
+
+            <!-- Social icons -->
+            <td
+              width="32"
+              style="
+                width:32px;
+                padding:0;
                 vertical-align:middle;
               "
             >
               <table
+                width="32"
                 cellpadding="0"
                 cellspacing="0"
                 border="0"
-                style="border-collapse:collapse;"
+                role="presentation"
+                style="
+                  width:32px;
+                  border-collapse:collapse;
+                  border-spacing:0;
+                "
               >
                 <tr>
-                  <td style="padding-bottom:8px;">
+                  <td style="padding:0 0 8px 0;">
                     <a
                       href="https://www.facebook.com/ShopPersonandCovey/"
                       target="_blank"
-                      style="
-                        text-decoration:none;
-                        border:0;
-                      "
+                      style="border:0;text-decoration:none;"
                     >
                       <img
                         src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/610a722c-6f29-53d0-92e1-c230a368d387_430x.png"
@@ -415,9 +654,10 @@
                           display:block;
                           width:32px;
                           height:32px;
+                          margin:0;
+                          padding:0;
                           border:0;
                           outline:none;
-                          text-decoration:none;
                         "
                       >
                     </a>
@@ -425,14 +665,11 @@
                 </tr>
 
                 <tr>
-                  <td style="padding-bottom:8px;">
+                  <td style="padding:0 0 8px 0;">
                     <a
                       href="https://www.instagram.com/personandcoveyinc"
                       target="_blank"
-                      style="
-                        text-decoration:none;
-                        border:0;
-                      "
+                      style="border:0;text-decoration:none;"
                     >
                       <img
                         src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/148d42bc-2bc3-58ac-9f5e-dbbc4279340f_430x.png"
@@ -443,9 +680,10 @@
                           display:block;
                           width:32px;
                           height:32px;
+                          margin:0;
+                          padding:0;
                           border:0;
                           outline:none;
-                          text-decoration:none;
                         "
                       >
                     </a>
@@ -453,14 +691,11 @@
                 </tr>
 
                 <tr>
-                  <td>
+                  <td style="padding:0;">
                     <a
                       href="https://www.tiktok.com/@personandcoveyinc"
                       target="_blank"
-                      style="
-                        text-decoration:none;
-                        border:0;
-                      "
+                      style="border:0;text-decoration:none;"
                     >
                       <img
                         src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/aa300f4f-2bd2-5daf-a926-fc3b95ead10f_430x.png"
@@ -471,9 +706,10 @@
                           display:block;
                           width:32px;
                           height:32px;
+                          margin:0;
+                          padding:0;
                           border:0;
                           outline:none;
-                          text-decoration:none;
                         "
                       >
                     </a>
@@ -481,45 +717,96 @@
                 </tr>
               </table>
             </td>
-          </tr>
 
-          <tr>
+            <!-- Small right-side space -->
             <td
-              colspan="3"
+              width="23"
               style="
-                padding-top:22px;
-                font-family:Arial,sans-serif;
-                font-size:16px;
-                color:#000000;
-                line-height:22px;
+                width:23px;
+                padding:0;
+                font-size:0;
+                line-height:0;
               "
             >
-              <img
-                src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/recycling_430x.png"
-                width="22"
-                height="22"
-                alt="Recycle"
-                style="
-                  display:inline-block;
-                  width:22px;
-                  height:22px;
-                  margin-right:6px;
-                  border:0;
-                  outline:none;
-                  text-decoration:none;
-                  vertical-align:middle;
-                "
-              >
-
-              <span style="vertical-align:middle;">
-                Please consider the environment before printing this email
-              </span>
+              &nbsp;
             </td>
           </tr>
 
-          ${confidentialitySection}
+          <!-- Environmental message -->
+          <tr>
+            <td
+              colspan="7"
+              width="${SIGNATURE_WIDTH}"
+              style="
+                width:${SIGNATURE_WIDTH}px;
+                padding:20px 0 0 0;
+                vertical-align:middle;
+              "
+            >
+              <table
+                width="${SIGNATURE_WIDTH}"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                role="presentation"
+                style="
+                  width:${SIGNATURE_WIDTH}px;
+                  border-collapse:collapse;
+                  border-spacing:0;
+                "
+              >
+                <tr>
+                  <td
+                    width="34"
+                    style="
+                      width:34px;
+                      padding:0;
+                      vertical-align:middle;
+                    "
+                  >
+                    <img
+                      src="https://cdn.shopify.com/s/files/1/0291/1600/6499/files/recycling_430x.png"
+                      width="22"
+                      height="22"
+                      alt="Recycle"
+                      style="
+                        display:block;
+                        width:22px;
+                        height:22px;
+                        margin:0;
+                        padding:0;
+                        border:0;
+                        outline:none;
+                      "
+                    >
+                  </td>
+
+                  <td
+                    width="436"
+                    style="
+                      width:436px;
+                      padding:0;
+                      font-family:Arial,Helvetica,sans-serif;
+                      font-size:16px;
+                      line-height:22px;
+                      color:#000000;
+                      vertical-align:middle;
+                      white-space:nowrap;
+                    "
+                  >
+                    Please consider the environment before printing this email
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          ${confidentialityRow}
         </table>
       `;
+
+      document.getElementById("signatureOutput").innerHTML =
+        signatureHTML;
     }
 
     async function copySignature() {
@@ -570,6 +857,7 @@
       range.selectNodeContents(element);
 
       const selection = window.getSelection();
+
       selection.removeAllRanges();
       selection.addRange(range);
 
